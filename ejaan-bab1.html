@@ -323,9 +323,9 @@
 
     <div class="container">
 
-        <div class="word-counter">Question 1 of 10</div>
+        <div class="word-counter">Soalan 1 of 10</div>
 
-        <div class="question">What is this?</div>
+        <div class="question">Apakah ini?</div>
 
         <img src="https://via.placeholder.com/200?text=Word+Image" alt="Word to spell" class="word-image" id="wordImage">
 
@@ -334,27 +334,27 @@
         </div>
 
         <div class="success-message" id="successMessage">
-            Correct! Well done!
+            Betul! Syabas!
         </div>
 
         <div class="error-message" id="errorMessage">
-            Wrong! Try again!
+            Salah! Cuba lagi!
         </div>
 
         <div class="controls">
-           <button id="playAudioBtn">Listen</button>
-            <button id="checkBtn">Check Answer</button>
-            <button id="nextBtn">Next Word</button>
-            <button id="hintBtn">Hint</button>
+           <button id="playAudioBtn">Sebutan</button>
+            <button id="checkBtn">Semak</button>
+            <button id="nextBtn">Seterusnya</button>
+            <button id="hintBtn">Klu</button>
         </div>
     </div>
 
     <!-- Completion Modal -->
     <div class="completion-modal" id="completionModal">
         <div class="completion-content">
-            <h2 style="color: #4a6fa5;">Congratulations!</h2>
-            <p>You've completed all the spelling words!</p>
-            <button id="restartBtn" style="margin-top: 20px;">Play Again</button>
+            <h2 style="color: #4a6fa5;">Tahniah!</h2>
+            <p>Kamu sudah menyiapkan semua perkataan ejaan!</p>
+            <button id="restartBtn" style="margin-top: 20px;">Klik butang ini untuk main lagi</button>
         </div>
     </div>
 
@@ -433,7 +433,7 @@
             questionElement.textContent = shuffledWordList[currentWordIndex].question;
 
             // Update counter
-            wordCounter.textContent = `Question ${currentWordIndex + 1} of ${shuffledWordList.length}`;
+            wordCounter.textContent = `Soalan ${currentWordIndex + 1} of ${shuffledWordList.length}`;
 
             // Clear previous letter boxes
             spellingContainer.innerHTML = '';
@@ -607,7 +607,7 @@
 
 	nextBtn.addEventListener('click', () => {
     	document.activeElement.blur();
-    	nextWord();
+    	//nextWord();
 	});
 
 	hintBtn.addEventListener('click', () => {
