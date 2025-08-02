@@ -82,19 +82,22 @@
 
         .letter-box {
             width: clamp(50px, 6vw, 90px);
-            height: clamp(60px, 8vw, 100px);
-            font-size: clamp(2rem, 2.5vw, 3rem);
-            border: 2px solid #89b0d9;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: #4a6fa5;
-            background-color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			height: clamp(60px, 8vw, 100px);
+			font-size: clamp(2rem, 2.5vw, 3rem);
+			border: 2px solid #89b0d9;
+			border-radius: 8px;
+			text-align: center;
+			font-weight: bold;
+			color: #4a6fa5;
+			background-color: white;
+    		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .letter-box:focus {
+    		outline: none;
+    		border-color: #ff6b6b;
+    		box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+		}
 
         .letter-box.empty {
             border: 2px dashed #c3cfe2;
@@ -436,14 +439,14 @@
 
             // Create letter boxes
             for (let i = 0; i < currentWord.length; i++) {
-                const letterBox = document.createElement('div');
-                letterBox.className = 'letter-box empty';
-                letterBox.dataset.index = i;
-                letterBox.dataset.correct = currentWord[i];
-                letterBox.tabIndex = 0; // Make it focusable
-                letterBox.addEventListener('click', () => focusLetterBox(letterBox));
-                letterBox.addEventListener('keydown', handleLetterInput);
-                spellingContainer.appendChild(letterBox);
+                const letterBox = document.createElement('input');
+				letterBox.className = 'letter-box empty';
+				letterBox.dataset.index = i;
+				letterBox.dataset.correct = currentWord[i];
+				letterBox.setAttribute('maxlength', '1');
+				letterBox.setAttribute('inputmode', 'latin');
+				letterBox.addEventListener('input', handleLetterInput);
+				spellingContainer.appendChild(letterBox);
             }
 
             // Hide messages
@@ -468,41 +471,26 @@
 
         // Handle letter input
         function handleLetterInput(e) {
-            if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
-                this.textContent = e.key.toLowerCase();
-                this.classList.remove('empty');
-                this.classList.add('filled');
-                this.classList.remove('incorrect', 'correct');
+            const input = e.target;
+			const val = input.value.toLowerCase();
 
-                // Move to next box
-                const nextBox = this.nextElementSibling;
-                if (nextBox) {
-                    focusLetterBox(nextBox);
-                }
+			if (/[a-z]/.test(val)) {
+				input.value = val;
+			    input.classList.remove('empty');
+			    input.classList.add('filled');
+			    input.classList.remove('incorrect', 'correct');
 
-                e.preventDefault();
-            } else if (e.key === 'Backspace' || e.key === 'Delete') {
-                this.textContent = '';
-                this.classList.add('empty');
-                this.classList.remove('filled', 'incorrect', 'correct');
-
-                // Move to previous box if empty
-                if (this.textContent === '' && this.previousElementSibling) {
-                    focusLetterBox(this.previousElementSibling);
-                }
-
-                e.preventDefault();
-            } else if (e.key === 'ArrowLeft') {
-                if (this.previousElementSibling) {
-                    focusLetterBox(this.previousElementSibling);
-                    e.preventDefault();
-                }
-            } else if (e.key === 'ArrowRight') {
-                if (this.nextElementSibling) {
-                    focusLetterBox(this.nextElementSibling);
-                    e.preventDefault();
-                }
-            }
+			     // auto move to next input
+			     const nextBox = input.nextElementSibling;
+			     if (nextBox) {
+			     	nextBox.focus();
+			     }
+			} else if (val === '') {
+				    input.classList.add('empty');
+        			input.classList.remove('filled', 'incorrect', 'correct');
+			} else {
+			    	input.value = '';
+    		}
         }
 
         // Check the answer
@@ -518,7 +506,8 @@
 
             // Check each letter
             letterBoxes.forEach((box, index) => {
-                const userLetter = box.textContent;
+                //const userLetter = box.textContent;
+                const userLetter = box.value.toLowerCase();
                 const correctLetter = currentWord[index];
 
                 if (userLetter === correctLetter) {
@@ -581,7 +570,8 @@
                 const randomIndex = Math.floor(Math.random() * emptyBoxes.length);
                 const box = emptyBoxes[randomIndex];
                 const position = parseInt(box.dataset.index);
-                box.textContent = currentWord[position];
+                //box.textContent = currentWord[position];
+                box.value = currentWord[position];
                 box.classList.remove('empty');
                 box.classList.add('filled');
                 box.classList.add('correct');
