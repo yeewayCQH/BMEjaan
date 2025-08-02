@@ -426,6 +426,7 @@
 
         // Initialize the game
         function initGame() {
+
             currentWord = shuffledWordList[currentWordIndex].word;
             wordImage.src = shuffledWordList[currentWordIndex].image;
             wordImage.alt = currentWord;
@@ -457,6 +458,9 @@
             if (spellingContainer.firstChild) {
                 focusLetterBox(spellingContainer.firstChild);
             }
+
+        	if (spellingContainer.firstChild)
+        		spellingContainer.firstChild.focus();
         }
 
         // Focus on a letter box
@@ -597,6 +601,26 @@
         		wordAudio.play();
     		}
 	}
+
+	checkBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	checkAnswer();
+	});
+
+	nextBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	nextWord();
+	});
+
+	hintBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	provideHint();
+	});
+
+	playAudioBtn.addEventListener('click', () => {
+   	 	document.activeElement.blur();
+    	playWordAudio();
+	});
 
         // Create confetti effect
         function createConfetti() {
