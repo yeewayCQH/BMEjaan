@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejaan Tahun 1 Bab 3</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: clamp(20px, 4vw, 60px);
+            width: 90%;
+            max-width: 1200px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            color: #4a6fa5;
+            font-size: 2.0rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            animation: bounce 4s infinite;
+        }
+
+        .word-image {
+        	width: auto;
+    		max-width: 90vw;
+    		height: auto;
+    		max-height: 50vh;
+    		display: block;
+    		margin: 10px auto;
+    		object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: clamp(1.8rem, 2vw, 3rem);
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: 600;
+            background-color: rgba(140, 193, 82, 0.2);
+            color: #8cc152;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .spelling-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .letter-box {
+            width: clamp(50px, 6vw, 90px);
+			height: clamp(60px, 8vw, 100px);
+			font-size: clamp(2rem, 2.5vw, 3rem);
+			border: 2px solid #89b0d9;
+			border-radius: 8px;
+			text-align: center;
+			font-weight: bold;
+			color: #4a6fa5;
+			background-color: white;
+    		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-box:focus {
+    		outline: none;
+    		border-color: #ff6b6b;
+    		box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+		}
+
+        .letter-box.empty {
+            border: 2px dashed #c3cfe2;
+        }
+
+        .letter-box.filled {
+            animation: pop 0.3s ease;
+            border-color: #4a6fa5;
+            background-color: #f0f5ff;
+        }
+
+        .letter-box.active {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        }
+
+        .letter-box.incorrect {
+            border-color: #ff6b6b;
+            background-color: #ffebee;
+            color: #ff6b6b;
+            animation: shake 0.5s;
+        }
+
+        .letter-box.correct {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .controls {
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4a6fa5 0%, #89b0d9 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(74, 111, 165, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(74, 111, 165, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+        }
+
+        .completion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .completion-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .completion-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes underlinePulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .word-counter {
+            color: #4a89dc;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            animation: bounce 0.5s;
+            display: none;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            animation: shake 0.5s;
+            display: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        .floating-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(44, 90, 160, 0.1);
+            border-radius: 50%;
+            animation: float 5s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .celebration {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: celebration 2s linear forwards;
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        @keyframes celebration {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-dots" id="floatingDots"></div>
+
+    <div class="container">
+
+        <div class="word-counter">Soalan 1 of 10</div>
+
+        <div class="question">Apakah ini?</div>
+
+        <img src="https://via.placeholder.com/200?text=Word+Image" alt="Word to spell" class="word-image" id="wordImage">
+
+        <div class="spelling-container" id="spellingContainer">
+            <!-- Letter boxes will be generated here by JavaScript -->
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Betul! Syabas!
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            Salah! Cuba lagi!
+        </div>
+
+        <div class="controls">
+           <button id="playAudioBtn">Sebutan</button>
+            <button id="checkBtn">Semak</button>
+            <button id="nextBtn">Seterusnya</button>
+            <button id="hintBtn">Klu</button>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="completion-modal" id="completionModal">
+        <div class="completion-content">
+            <h2 style="color: #4a6fa5;">Tahniah!</h2>
+            <p>Kamu sudah menyiapkan semua perkataan ejaan!</p>
+            <button id="restartBtn" style="margin-top: 20px;">Klik butang ini untuk main lagi</button>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="correctSound"  src="audio/correct.mp3" preload="auto"></audio>
+    <audio id="wrongSound"    src="audio/wrong.mp3" preload="auto"></audio>
+    <audio id="completeSound" src="audio/applause.mp3" preload="auto"></audio>
+
+    <script>
+        // Sample word list with image URLs (replace with actual image URLs)
+        const wordList = [
+                   { word: "awan",	    		image: "images/Bab3/03_awan.jpg",     			question: "", audio: "audio_bab/Bab3/03_awan.mp3" },
+                   { word: "bakul",	    		image: "images/Bab3/03_bakul.jpg",     			question: "", audio: "audio_bab/Bab3/03_bakul.mp3" },
+                   { word: "cakoi",	    		image: "images/Bab3/03_cakoi.jpg",     			question: "", audio: "audio_bab/Bab3/03_cakoi.mp3" },
+                   { word: "cawan",	    		image: "images/Bab3/03_cawan.jpg",     			question: "", audio: "audio_bab/Bab3/03_cawan.mp3" },
+                   { word: "datuk",	    		image: "images/Bab3/03_datuk.jpg",     			question: "", audio: "audio_bab/Bab3/03_datuk.mp3" },
+                   { word: "gambar",	    	image: "images/Bab3/03_gambar.jpg",     		question: "", audio: "audio_bab/Bab3/03_gambar.mp3" },
+                   { word: "gerai",	    		image: "images/Bab3/03_gerai.jpg",     			question: "", audio: "audio_bab/Bab3/03_gerai.mp3" },
+                   { word: "hijau",	    		image: "images/Bab3/03_hijau.jpg",     			question: "", audio: "audio_bab/Bab3/03_hijau.mp3" },
+                   { word: "itik",	    		image: "images/Bab3/03_itik.jpg",     			question: "", audio: "audio_bab/Bab3/03_itik.mp3" },
+                   { word: "joran",	    		image: "images/Bab3/03_joran.jpg",     			question: "", audio: "audio_bab/Bab3/03_joran.mp3" },
+                   { word: "kampung",	    	image: "images/Bab3/03_kampung.jpg",     		question: "", audio: "audio_bab/Bab3/03_kampung.mp3" },
+                   { word: "kasut",	    		image: "images/Bab3/03_kasut.jpg",     			question: "", audio: "audio_bab/Bab3/03_kasut.mp3" },
+                   { word: "kolam",	    		image: "images/Bab3/03_kolam.jpg",     			question: "", audio: "audio_bab/Bab3/03_kolam.mp3" },
+                   { word: "lembu",	    		image: "images/Bab3/03_lembu.jpg",     			question: "", audio: "audio_bab/Bab3/03_lembu.mp3" },
+                   { word: "limau",	    		image: "images/Bab3/03_limau.jpg",     			question: "", audio: "audio_bab/Bab3/03_limau.mp3" },
+                   { word: "matahari",	    	image: "images/Bab3/03_matahari.jpg",     		question: "", audio: "audio_bab/Bab3/03_matahari.mp3" },
+                   { word: "memancing",	    	image: "images/Bab3/03_memancing.jpg",     		question: "", audio: "audio_bab/Bab3/03_memancing.mp3" },
+                   { word: "mesra",	    		image: "images/Bab3/03_mesra.jpg",     			question: "", audio: "audio_bab/Bab3/03_mesra.mp3" },
+                   { word: "padi",	    		image: "images/Bab3/03_padi.jpg",     			question: "", audio: "audio_bab/Bab3/03_padi.mp3" },
+                   { word: "pau",	    		image: "images/Bab3/03_pau.jpg",     			question: "", audio: "audio_bab/Bab3/pau.wav" },
+                   { word: "rak",	    		image: "images/Bab3/03_rak.jpg",     			question: "", audio: "audio_bab/Bab3/03_rak.mp3" },
+                   { word: "rambut",	    	image: "images/Bab3/03_rambut.jpg",     		question: "", audio: "audio_bab/Bab3/03_rambut.mp3" },
+                   { word: "rumput",	    	image: "images/Bab3/03_rumput.jpg",     		question: "", audio: "audio_bab/Bab3/03_rumput.mp3" },
+	];
+
+        // Shuffle the word list
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let shuffledWordList = shuffleArray([...wordList]);
+        let currentWordIndex = 0;
+        let currentWord = "";
+        let activeLetterBox = null;
+
+        // DOM elements
+        const spellingContainer = document.getElementById('spellingContainer');
+        const wordImage = document.getElementById('wordImage');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const wordCounter = document.querySelector('.word-counter');
+        const completionModal = document.getElementById('completionModal');
+        const restartBtn = document.getElementById('restartBtn');
+        const floatingDots = document.getElementById('floatingDots');
+        const questionElement = document.querySelector('.question');
+
+        // Audio elements
+        const correctSound  = document.getElementById('correctSound');
+        const wrongSound    = document.getElementById('wrongSound');
+        const completeSound = document.getElementById('completeSound');
+        const playAudioBtn  = document.getElementById('playAudioBtn');
+
+        // Initialize the game
+        function initGame() {
+
+            currentWord = shuffledWordList[currentWordIndex].word;
+            wordImage.src = shuffledWordList[currentWordIndex].image;
+            wordImage.alt = currentWord;
+            questionElement.textContent = shuffledWordList[currentWordIndex].question;
+
+            // Update counter
+            wordCounter.textContent = `Soalan ${currentWordIndex + 1} of ${shuffledWordList.length}`;
+
+            // Clear previous letter boxes
+            spellingContainer.innerHTML = '';
+
+            // Create letter boxes
+            for (let i = 0; i < currentWord.length; i++) {
+                const letterBox = document.createElement('input');
+				letterBox.className = 'letter-box empty';
+				letterBox.dataset.index = i;
+				letterBox.dataset.correct = currentWord[i];
+				letterBox.setAttribute('maxlength', '1');
+				letterBox.setAttribute('inputmode', 'latin');
+				letterBox.addEventListener('input', handleLetterInput);
+				spellingContainer.appendChild(letterBox);
+            }
+
+            // Hide messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            // Focus on first letter box
+            //if (spellingContainer.firstChild) {
+            //    focusLetterBox(spellingContainer.firstChild);
+            //    spellingContainer.firstChild.focus();
+            //}
+        }
+
+        // Focus on a letter box
+        function focusLetterBox(box) {
+            if (activeLetterBox) {
+                activeLetterBox.classList.remove('active');
+            }
+            activeLetterBox = box;
+            activeLetterBox.classList.add('active');
+            activeLetterBox.focus();
+        }
+
+        // Handle letter input
+        function handleLetterInput(e) {
+            const input = e.target;
+			const val = input.value.toLowerCase();
+
+			if (/[a-z]/.test(val)) {
+				input.value = val;
+			    input.classList.remove('empty');
+			    input.classList.add('filled');
+			    input.classList.remove('incorrect', 'correct');
+
+			     // auto move to next input
+			     const nextBox = input.nextElementSibling;
+			     if (nextBox) {
+			     	nextBox.focus();
+			     }
+			} else if (val === '') {
+				    input.classList.add('empty');
+        			input.classList.remove('filled', 'incorrect', 'correct');
+			} else {
+			    	input.value = '';
+    		}
+        }
+
+        // Check the answer
+        function checkAnswer() {
+            const letterBoxes = document.querySelectorAll('.letter-box:not(.empty)');
+            let userAnswer = '';
+            let hasError = false;
+
+            // Clear previous markings
+            letterBoxes.forEach(box => {
+                box.classList.remove('incorrect', 'correct');
+            });
+
+            // Check each letter
+            letterBoxes.forEach((box, index) => {
+                //const userLetter = box.textContent;
+                const userLetter = box.value.toLowerCase();
+                const correctLetter = currentWord[index];
+
+                if (userLetter === correctLetter) {
+                    box.classList.add('correct');
+                } else {
+                    box.classList.add('incorrect');
+                    hasError = true;
+                }
+
+                userAnswer += userLetter;
+            });
+
+            if (!hasError && userAnswer === currentWord) {
+                correctSound.play();
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                //createConfetti();
+                createCelebration();
+
+            } else {
+                wrongSound.play();
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                // Shake animation for wrong answer
+                spellingContainer.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    spellingContainer.style.animation = '';
+                }, 500);
+            }
+        }
+
+        // Move to next word
+        function nextWord() {
+            if (currentWordIndex < shuffledWordList.length - 1) {
+                currentWordIndex++;
+                initGame();
+            } else {
+                showCompletionModal();
+            }
+        }
+
+        // Show completion modal
+        function showCompletionModal() {
+            completeSound.play();
+            completionModal.classList.add('active');
+        }
+
+        // Restart game
+        function restartGame() {
+            shuffledWordList = shuffleArray([...wordList]);
+            currentWordIndex = 0;
+            completionModal.classList.remove('active');
+            initGame();
+        }
+
+        // Provide a hint
+        function provideHint() {
+            const emptyBoxes = document.querySelectorAll('.letter-box.empty');
+            if (emptyBoxes.length > 0) {
+                const randomIndex = Math.floor(Math.random() * emptyBoxes.length);
+                const box = emptyBoxes[randomIndex];
+                const position = parseInt(box.dataset.index);
+                //box.textContent = currentWord[position];
+                box.value = currentWord[position];
+                box.classList.remove('empty');
+                box.classList.add('filled');
+                box.classList.add('correct');
+
+                // Move focus to next empty box
+                let nextBox = box.nextElementSibling;
+                while (nextBox && !nextBox.classList.contains('empty')) {
+                    nextBox = nextBox.nextElementSibling;
+                }
+                if (nextBox) {
+                    focusLetterBox(nextBox);
+                }
+            }
+        }
+
+	// Play audio for current word
+	let wordAudio = new Audio();
+
+	function playWordAudio() {
+    		const audioSrc = shuffledWordList[currentWordIndex].audio;
+    		if (audioSrc) {
+        		wordAudio.src = audioSrc;
+        		wordAudio.play();
+    		}
+	}
+
+	checkBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	checkAnswer();
+	});
+
+	nextBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	//nextWord();
+	});
+
+	hintBtn.addEventListener('click', () => {
+    	document.activeElement.blur();
+    	provideHint();
+	});
+
+	playAudioBtn.addEventListener('click', () => {
+   	 	document.activeElement.blur();
+    	playWordAudio();
+	});
+
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6'];
+
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 8 + 4;
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                const angle = Math.random() * 360;
+                const velocity = Math.random() * 8 + 4;
+
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${posX}px`;
+                confetti.style.top = `${posY}px`;
+                confetti.style.transform = `rotate(${angle}deg)`;
+                confetti.style.opacity = '1';
+
+                document.body.appendChild(confetti);
+
+                // 动画
+                setTimeout(() => {
+                    confetti.style.transition = `all ${Math.random() * 1.5 + 0.5}s ease-out`;
+                    confetti.style.transform = `rotate(${angle + 360}deg) translateX(${(Math.random() - 0.5) * 200}px) translateY(${velocity * 12}px)`;
+                    confetti.style.opacity = '0';
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 1500);
+                }, i * 10);
+            }
+        }
+
+        // Create floating dots background
+        function createFloatingDots() {
+            for (let i = 0; i < 30; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.style.left = Math.random() * 100 + 'vw';
+                dot.style.backgroundColor = getRandomColor();
+                dot.style.animationDuration = 10 + Math.random() * 20 + 's';
+                dot.style.animationDelay = Math.random() * 5 + 's';
+                dot.style.width = dot.style.height = 5 + Math.random() * 50 + 'px';
+                floatingDots.appendChild(dot);
+            }
+        }
+
+        function getRandomColor() {
+            const colors = ['#3a75c4', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Create celebration effect
+        function createCelebration() {
+            for (let i = 0; i < 30; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'celebration';
+                dot.style.left = '50%';
+                dot.style.top = '50%';
+                dot.style.backgroundColor = getRandomColor();
+                dot.style.setProperty('--tx', (Math.random() - 0.5) * 300 + 'px');
+                dot.style.setProperty('--ty', (Math.random() - 0.5) * 300 + 'px');
+                document.body.appendChild(dot);
+
+                setTimeout(() => {
+                    dot.remove();
+                }, 2000);
+            }
+        }
+
+        // Event listeners
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextWord);
+        hintBtn.addEventListener('click', provideHint);
+        restartBtn.addEventListener('click', restartGame);
+        playAudioBtn.addEventListener('click', playWordAudio);
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            } else if (e.key === 'ArrowRight' && e.ctrlKey) {
+                nextWord();
+            } else if (e.key === 'h' && e.ctrlKey) {
+                provideHint();
+            }
+        });
+
+        // Initialize the first word
+        initGame();
+        createFloatingDots();
+    </script>
+</body>
+</html>
